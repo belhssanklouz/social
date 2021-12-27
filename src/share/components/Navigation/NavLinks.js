@@ -1,7 +1,11 @@
 import './NavLinks.css';
 import {NavLink} from 'react-router-dom';
-import { useState } from 'react';
+import { useState,useContext } from 'react';
+import { AuthContext } from '../../context/Auth-context';
 function NavLinks (props) {
+
+    const auth = useContext(AuthContext);
+
     let [CurrentPosition,setCurrentPosition]=useState();
 
     let over =(ev)=>{
@@ -36,9 +40,11 @@ function NavLinks (props) {
     return(
         <ul className="nav-links">
            <NavLink to="/"><li onMouseOver={over} onMouseOut={out}>All Users</li></NavLink>
-           <NavLink to="/u1/places"><li onMouseOver={over} onMouseOut={out}>My Places</li></NavLink>
-           <NavLink to="/places/new"><li onMouseOver={over} onMouseOut={out}>New Place</li></NavLink>
-           <NavLink to="/auth"><li onMouseOver={over} onMouseOut={out}>Authenticate</li></NavLink>
+           {auth.isLoggedIn && <NavLink to="/u1/places"><li onMouseOver={over} onMouseOut={out}>My Places</li></NavLink>}
+           {auth.isLoggedIn && <NavLink to="/places/new"><li onMouseOver={over} onMouseOut={out}>New Place</li></NavLink>}
+           {!auth.isLoggedIn &&<NavLink to="/auth"><li onMouseOver={over} onMouseOut={out}>Authenticate</li></NavLink>}
+           {auth.isLoggedIn &&<NavLink to='/' onClick={auth.logout}><li onMouseOver={over} onMouseOut={out}>Logout</li></NavLink>}
+
         </ul>
     )
 }
